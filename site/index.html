@@ -72,7 +72,7 @@ kbd { font-family: var(--body); font-size: .82em; font-weight: 600; padding: 2px
 .mac { width: 100%; max-width: 100% }
 .mac .lid { background: #17161c; border-radius: 22px 22px 6px 6px; padding: 12px; box-shadow: inset 0 0 0 2px #2d2b35 }
 .mac .screen { position: relative; border-radius: 12px 12px 3px 3px; overflow: hidden; aspect-ratio: 1110 / 630; background: #000 }
-.mac video, .clip video { display: block; width: 100%; height: 100%; object-fit: cover }
+.clip { position: relative }
 .mac .base { height: 16px; margin: 0 -5%; border-radius: 2px 2px 16px 16px; background: linear-gradient(#cfcdd6, #9e9ca8); position: relative }
 .mac .base::after { content: ""; position: absolute; left: 50%; top: 0; width: 14%; height: 6px; transform: translateX(-50%); border-radius: 0 0 6px 6px; background: #8a8894 }
 
@@ -158,8 +158,8 @@ html.pinned .scrolly-stage { display: grid; position: sticky; top: calc(env(safe
 .caps .text.on { opacity: 1; transform: translateY(-50%); pointer-events: auto }
 .stage-mac { perspective: 1800px; min-width: 0 }
 .stage-mac .mac { transform-origin: 50% 100% }
-.stage-mac .screen video { position: absolute; inset: 0; opacity: 0; transition: opacity .45s ease }
-.stage-mac .screen video.on { opacity: 1 }
+.stage-mac .screen .nd { opacity: 0; transition: opacity .45s ease }
+.stage-mac .screen .nd.on { opacity: 1 }
 .rail { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 26px }
 .rail button { position: relative; overflow: hidden; font: 500 13px var(--body); color: var(--muted); background: none; border: 1px solid var(--line); border-radius: 999px; padding: 6px 13px; cursor: pointer }
 .rail button.on { color: var(--fg); border-color: var(--violet) }
@@ -184,6 +184,7 @@ html.pinned .scrolly-stage { display: grid; position: sticky; top: calc(env(safe
   .marquee ul { flex-wrap: wrap; justify-content: center }
 }
 </style>
+<link rel="stylesheet" href="demo.css">
 </head>
 <body>
 <header class="notch">
@@ -208,7 +209,7 @@ html.pinned .scrolly-stage { display: grid; position: sticky; top: calc(env(safe
     </div>
     <figure class="mac" id="demo" style="margin:0">
       <div class="lid"><div class="screen">
-        <video src="media/hero.mp4" poster="media/hero.jpg" muted loop playsinline autoplay aria-label="Quay màn hình MyNotch: mở notch, chuyển qua Nhạc, Clipboard, Lịch, Hẹn giờ, Pin và kéo file vào Khay"></video>
+        <div class="nd" data-scene="hero" role="img" aria-label="Minh hoạ MyNotch: mở notch, chuyển qua Nhạc, Clipboard, Lịch, Hẹn giờ, Pin và kéo file vào Khay"></div>
       </div></div>
       <div class="base"></div>
     </figure>
@@ -236,15 +237,15 @@ html.pinned .scrolly-stage { display: grid; position: sticky; top: calc(env(safe
       </div>
     </div>
 
-    <section class="feature only-pinned" data-video="media/hero.mp4" data-poster="media/hero.jpg" data-label="Toàn cảnh">
+    <section class="feature only-pinned" data-scene="hero" data-label="Toàn cảnh">
       <div class="text">
         <span class="eyebrow">Toàn cảnh</span>
         <h2>Một notch, đủ việc trong ngày.</h2>
-        <p>Đây là MyNotch đang chạy thật trên MacBook. Cuộn xuống để xem từng module mở ra ngay dưới notch.</p>
+        <p>Đây là MyNotch trên MacBook, dựng lại theo đúng giao diện của app. Cuộn xuống để xem từng module mở ra ngay dưới notch.</p>
       </div>
     </section>
 
-    <section class="feature" data-video="media/s-media.mp4" data-poster="media/s-media.jpg" data-label="Nhạc">
+    <section class="feature" data-scene="media" data-label="Nhạc">
       <div class="text">
         <span class="eyebrow">Nhạc</span>
         <h2>Bài đang phát, ngay dưới notch.</h2>
@@ -255,10 +256,10 @@ html.pinned .scrolly-stage { display: grid; position: sticky; top: calc(env(safe
           <li>Có thể hiện hai dòng lời ngay dưới notch thu gọn</li>
         </ul>
       </div>
-      <div class="clip"><video src="media/media.mp4" poster="media/media.jpg" muted loop playsinline aria-label="Tab Nhạc của MyNotch đang phát một bài"></video></div>
+      <div class="clip"><div class="nd" data-scene="media" role="img" aria-label="Tab Nhạc của MyNotch đang phát một bài"></div></div>
     </section>
 
-    <section class="feature flip" data-video="media/s-clip.mp4" data-poster="media/s-clip.jpg" data-label="Clipboard">
+    <section class="feature flip" data-scene="clip" data-label="Clipboard">
       <div class="text">
         <span class="eyebrow">Clipboard</span>
         <h2>Copy một lần, dán lúc nào cũng được.</h2>
@@ -269,10 +270,10 @@ html.pinned .scrolly-stage { display: grid; position: sticky; top: calc(env(safe
           <li>Thư viện có dạng lưới và danh sách, lọc theo board, loại hoặc app</li>
         </ul>
       </div>
-      <div class="clip"><video src="media/clip.mp4" poster="media/clip.jpg" muted loop playsinline aria-label="Tab Clipboard với các thẻ văn bản, mã màu và link"></video></div>
+      <div class="clip"><div class="nd" data-scene="clip" role="img" aria-label="Tab Clipboard với các thẻ văn bản, mã màu và link"></div></div>
     </section>
 
-    <section class="feature" data-video="media/s-timer.mp4" data-poster="media/s-timer.jpg" data-label="Lịch và Hẹn giờ">
+    <section class="feature" data-scene="timer" data-label="Lịch và Hẹn giờ">
       <div class="text">
         <span class="eyebrow">Lịch và Hẹn giờ</span>
         <h2>Cuộc họp kế tiếp và phiên tập trung, cách nhau một tab.</h2>
@@ -283,10 +284,10 @@ html.pinned .scrolly-stage { display: grid; position: sticky; top: calc(env(safe
           <li>Chọn lịch nào được hiện trong cài đặt</li>
         </ul>
       </div>
-      <div class="clip"><video src="media/timer.mp4" poster="media/timer.jpg" muted loop playsinline aria-label="Tab Hẹn giờ: chọn 5 phút và đếm ngược"></video></div>
+      <div class="clip"><div class="nd" data-scene="timer" role="img" aria-label="Tab Hẹn giờ: chọn 5 phút và đếm ngược"></div></div>
     </section>
 
-    <section class="feature flip" data-video="media/s-battery.mp4" data-poster="media/s-battery.jpg" data-label="Pin">
+    <section class="feature flip" data-scene="battery" data-label="Pin">
       <div class="text">
         <span class="eyebrow">Pin</span>
         <h2>Pin và bộ sạc, đủ chi tiết.</h2>
@@ -297,10 +298,10 @@ html.pinned .scrolly-stage { display: grid; position: sticky; top: calc(env(safe
           <li>Dung lượng tối đa và số chu kỳ sạc</li>
         </ul>
       </div>
-      <div class="clip"><video src="media/battery.mp4" poster="media/battery.jpg" muted loop playsinline aria-label="Tab Pin với mức pin 80% và thông số bộ sạc"></video></div>
+      <div class="clip"><div class="nd" data-scene="battery" role="img" aria-label="Tab Pin với mức pin 80% và thông số bộ sạc"></div></div>
     </section>
 
-    <section class="feature" data-video="media/s-shelf.mp4" data-poster="media/s-shelf.jpg" data-label="Khay">
+    <section class="feature" data-scene="shelf" data-label="Khay">
       <div class="text">
         <span class="eyebrow">Khay</span>
         <h2>Kéo lên notch là cất.</h2>
@@ -311,7 +312,7 @@ html.pinned .scrolly-stage { display: grid; position: sticky; top: calc(env(safe
           <li>Dọn cả khay bằng một nút Xoá tất cả</li>
         </ul>
       </div>
-      <div class="clip"><video src="media/shelf.mp4" poster="media/shelf.jpg" muted loop playsinline aria-label="Kéo một file từ desktop thả vào Khay của MyNotch"></video></div>
+      <div class="clip"><div class="nd" data-scene="shelf" role="img" aria-label="Kéo một file từ desktop thả vào Khay của MyNotch"></div></div>
     </section>
   </div>
 
@@ -378,13 +379,14 @@ html.pinned .scrolly-stage { display: grid; position: sticky; top: calc(env(safe
   <section class="closing reveal">
     <span class="eyebrow">Đang phát triển</span>
     <h2>MyNotch đang được hoàn thiện.</h2>
-    <p>Các module trên trang này đều đã chạy trên bản đang phát triển, như đoạn quay màn hình ở đầu trang.</p>
+    <p>Các module trên trang này đều đã chạy trên bản đang phát triển, như phần minh hoạ ở đầu trang.</p>
     <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center"><a class="btn primary" href="#top">Xem lại demo</a><a class="btn ghost" href="huong-dan.html">Đọc hướng dẫn</a></div>
   </section>
 
   <footer><span>MyNotch · ứng dụng notch chia theo module cho macOS 26+</span><span>Dữ liệu ở trên máy của bạn</span></footer>
 </main>
 
+<script src="demo.js"></script>
 <script>
 (function () {
   var root = document.documentElement;
@@ -401,11 +403,9 @@ html.pinned .scrolly-stage { display: grid; position: sticky; top: calc(env(safe
   var steps = [], pinned = false, cur = -1, ticking = false;
 
   [].slice.call(scrolly.querySelectorAll('.feature')).forEach(function (f, i) {
-    var v = document.createElement('video');
-    v.src = f.getAttribute('data-video'); v.poster = f.getAttribute('data-poster');
-    v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'metadata';
-    v.setAttribute('playsinline', ''); v.setAttribute('aria-hidden', 'true');
-    screen.appendChild(v);
+    var v = document.createElement('div');
+    v.className = 'nd'; v.setAttribute('data-scene', f.getAttribute('data-scene')); v.setAttribute('aria-hidden', 'true');
+    screen.appendChild(v); NotchDemo.mount(v);
     var b = document.createElement('button');
     b.type = 'button'; b.textContent = f.getAttribute('data-label');
     var bar = document.createElement('i'); b.appendChild(bar);
@@ -433,7 +433,7 @@ html.pinned .scrolly-stage { display: grid; position: sticky; top: calc(env(safe
     root.classList.add('pinned');
     scrolly.style.setProperty('--steps', (steps.length * 0.9 + 1).toFixed(2));
     steps.forEach(function (s) { caps.appendChild(s.t); });
-    document.querySelectorAll('.clip video, .hero .mac video').forEach(function (v) { v.pause(); });
+    document.querySelectorAll('.clip .nd, .hero .mac .nd').forEach(function (v) { v.pause(); });
   }
   function unpin() {
     pinned = false; cur = -1;
@@ -486,9 +486,9 @@ html.pinned .scrolly-stage { display: grid; position: sticky; top: calc(env(safe
   if (mqWide.addEventListener) { mqWide.addEventListener('change', mode); mqCalm.addEventListener('change', mode); }
   mode();
 
-  var rowVids = [].slice.call(document.querySelectorAll('.clip video, .hero .mac video'));
+  var rowVids = [].slice.call(document.querySelectorAll('.clip .nd, .hero .mac .nd'));
   if (mqCalm.matches) {
-    rowVids.forEach(function (v) { v.removeAttribute('autoplay'); v.pause(); v.controls = true; });
+    rowVids.forEach(function (v) { v.pause(); });
   } else if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) { if (en.isIntersecting && !pinned) en.target.play().catch(function () {}); else en.target.pause(); });
