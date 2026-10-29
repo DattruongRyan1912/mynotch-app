@@ -1,0 +1,77 @@
+name: Video
+
+# Renders the MyNotch tour (about 4 minutes, 1920×1080) and one 1280×720 clip per module with Remotion.
+# Run it by hand from the Actions tab, or it runs when a release is published and attaches the videos to it.
+# Background music: set the repository secret MUSIC_URL to a direct link to an audio file you are licensed to use;
+# without it the videos render silent. The file is downloaded at render time and never committed.
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: video-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      MUSIC_URL: ${{ secrets.MUSIC_URL }}
+    defaults:
+      run:
+        working-directory: video
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: video/package-lock.json
+
+      - name: Libraries for headless Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libnss3 libatk1.0-0t64 libatk-bridge2.0-0t64 libcups2t64 libxkbcommon0 \
+            libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2t64 libpango-1.0-0 libcairo2
+
+      - run: npm ci
+
+      - run: ./node_modules/.bin/remotion browser ensure
+
+      - name: Music
+        id: music
+        run: |
+          if [ -n "$MUSIC_URL" ]; then
+            curl -fsSL "$MUSIC_URL" -o public/music.mp3
+            echo 'props={"music":"music.mp3"}' >> "$GITHUB_OUTPUT"
+          else
+            echo 'props={"music":null}' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Tour
+        run: ./node_modules/.bin/remotion render src/index.ts Tour out/MyNotch-gioi-thieu.mp4 --props='${{ steps.music.outputs.props }}'
+
+      - name: Module clips
+        run: node scripts/render-clips.mjs --props='${{ steps.music.outputs.props }}'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mynotch-video
+          path: |
+            video/out/MyNotch-gioi-thieu.mp4
+            video/out/clips/*.mp4
+          retention-days: 30
+
+      - name: Attach to the release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$TAG" out/MyNotch-gioi-thieu.mp4 out/clips/*.mp4 --clobber

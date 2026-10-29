@@ -1,0 +1,23 @@
+{
+  "name": "mynotch-video",
+  "private": true,
+  "description": "Video giới thiệu MyNotch dựng bằng Remotion",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "render:tour": "remotion render src/index.ts Tour out/MyNotch-gioi-thieu.mp4",
+    "render:clips": "node scripts/render-clips.mjs"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.535",
+    "@remotion/google-fonts": "4.0.535",
+    "@remotion/media-utils": "4.0.535",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "remotion": "4.0.535"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.2",
+    "typescript": "5.9.3"
+  }
+}
