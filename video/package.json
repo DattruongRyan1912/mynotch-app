@@ -6,6 +6,7 @@
     "studio": "remotion studio src/index.ts",
     "typecheck": "tsc --noEmit",
     "render:tour": "remotion render src/index.ts Tour out/MyNotch-gioi-thieu.mp4",
+    "render:cinematic": "remotion render src/index.ts CinematicIntro out/MyNotch-cinematic-intro.mp4 --scale=0.6666666666666666",
     "render:clips": "node scripts/render-clips.mjs"
   },
   "dependencies": {

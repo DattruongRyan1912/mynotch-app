@@ -2,6 +2,7 @@ import React from "react";
 import { AbsoluteFill, Audio, Composition, Series, staticFile, useVideoConfig } from "remotion";
 import { CLIP_IDS, SCENES } from "./scenes";
 import { FPS, VIDEO } from "./lib/theme";
+import { CinematicIntro, CinematicIntroProps } from "./cinematic";
 
 type TourProps = { music: string | null };
 
@@ -38,6 +39,7 @@ const total = SCENES.reduce((n, s) => n + s.dur, 0);
 export const Root: React.FC = () => (
   <>
     <Composition id="Tour" component={Tour} durationInFrames={total} fps={FPS} width={VIDEO.w} height={VIDEO.h} defaultProps={{ music: null } as TourProps} />
+    <Composition id="CinematicIntro" component={CinematicIntro} durationInFrames={3300} fps={FPS} width={VIDEO.w} height={VIDEO.h} defaultProps={{ music: null } as CinematicIntroProps} />
     {CLIP_IDS.map((id) => {
       const s = SCENES.find((x) => x.id === id)!;
       const Clip: React.FC<TourProps> = ({ music }) => (
